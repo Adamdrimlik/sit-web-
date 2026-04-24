@@ -1,0 +1,507 @@
+{% extends "base.html" %}
+
+{% block title %}الانضمام إلى غرفة - Mafia Online{% endblock %}
+
+{% block content %}
+<div class="page-container mafia-bg">
+    <div class="main-content">
+        <div class="container">
+            <!-- Header -->
+            <div class="page-header">
+                <a href="{{ url_for('index') }}" class="btn btn-ghost back-btn">
+                    <span>← رجوع للرئيسية</span>
+                </a>
+                <h1 class="page-title">🚪 الانضمام إلى غرفة</h1>
+                <p class="page-subtitle">أدخل رمز الغرفة وانضم للعبة مع أصدقائك</p>
+            </div>
+
+            <!-- Main Form -->
+            <div class="grid grid-2">
+                <!-- Join Form -->
+                <div class="form-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">معلومات الانضمام</h3>
+                            <p class="card-subtitle">أدخل التفاصيل المطلوبة للانضمام</p>
+                        </div>
+
+                        <form id="joinRoomForm" class="join-form">
+                            <div class="form-group">
+                                <label for="roomCode" class="form-label">رمز الغرفة *</label>
+                                <input
+                                    type="text"
+                                    id="roomCode"
+                                    name="roomCode"
+                                    class="form-control"
+                                    placeholder="مثال: ABC123"
+                                    required
+                                    maxlength="6"
+                                    style="text-transform: uppercase; font-family: 'Courier New', monospace; text-align: center; font-size: 1.25rem; letter-spacing: 2px;"
+                                >
+                                <div class="form-text">الرمز مكون من 6 أحرف كبيرة</div>
+                                <div class="form-error" id="roomCodeError"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="username" class="form-label">اسم اللاعب *</label>
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    class="form-control"
+                                    placeholder="أدخل اسمك (2-50 حرف)"
+                                    required
+                                    minlength="2"
+                                    maxlength="50"
+                                >
+                                <div class="form-text">سيظهر هذا الاسم لجميع اللاعبين في الغرفة</div>
+                                <div class="form-error" id="usernameError"></div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary btn-lg" id="joinBtn">
+                                    <span class="loading hidden" id="joinLoading">
+                                        <div class="spinner"></div>
+                                    </span>
+                                    <span id="joinText">🚪 الانضمام الآن</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Help Section -->
+                <div class="help-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">كيف تحصل على رمز الغرفة؟</h3>
+                            <p class="card-subtitle">اتبع هذه الخطوات البسيطة</p>
+                        </div>
+
+                        <div class="help-steps">
+                            <div class="help-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>اطلب الرمز من المضيف</h4>
+                                    <p>يجب أن يكون لديك رمز الغرفة من الشخص الذي أنشأ الغرفة</p>
+                                </div>
+                            </div>
+
+                            <div class="help-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>أدخل الرمز بدقة</h4>
+                                    <p>الرمز مكون من 8 أحرف كبيرة، تأكد من كتابته بشكل صحيح</p>
+                                </div>
+                            </div>
+
+                            <div class="help-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>اختر اسماً مميزاً</h4>
+                                    <p>اختر اسماً فريداً لتمييزك عن باقي اللاعبين</p>
+                                </div>
+                            </div>
+
+                            <div class="help-step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>انضم واستمتع</h4>
+                                    <p>بعد الانضمام ستدخل غرفة الانتظار وتنتظر بدء اللعبة</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="quick-actions card">
+                        <h4>🔗 روابط سريعة</h4>
+                        <div class="action-links">
+                            <a href="{{ url_for('create_room') }}" class="action-link">
+                                <span>🎭 إنشاء غرفة جديدة</span>
+                            </a>
+                            <a href="{{ url_for('index') }}" class="action-link">
+                                <span>🏠 العودة للرئيسية</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Alert -->
+            <div id="errorAlert" class="alert alert-error hidden">
+                <div class="alert-icon">⚠️</div>
+                <div id="errorText">حدث خطأ غير متوقع</div>
+            </div>
+
+            <!-- Loading Overlay -->
+            <div id="loadingOverlay" class="loading-overlay hidden">
+                <div class="loading-content">
+                    <div class="spinner"></div>
+                    <h3>جاري الانضمام إلى الغرفة...</h3>
+                    <p>يرجى الانتظار قليلاً</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('joinRoomForm');
+    const roomCodeInput = document.getElementById('roomCode');
+    const usernameInput = document.getElementById('username');
+    const roomCodeError = document.getElementById('roomCodeError');
+    const usernameError = document.getElementById('usernameError');
+    const errorAlert = document.getElementById('errorAlert');
+    const errorText = document.getElementById('errorText');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const joinBtn = document.getElementById('joinBtn');
+    const joinLoading = document.getElementById('joinLoading');
+    const joinText = document.getElementById('joinText');
+
+    // Auto-convert room code to uppercase
+    roomCodeInput.addEventListener('input', function() {
+        this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        roomCodeError.textContent = '';
+
+        // Auto-format with spaces for readability
+        const value = this.value;
+        if (value.length > 3) {
+            this.value = value.slice(0, 3) + ' ' + value.slice(3);
+        }
+    });
+
+    // Remove spaces when submitting
+    roomCodeInput.addEventListener('blur', function() {
+        this.value = this.value.replace(/\s/g, '');
+    });
+
+    // Username validation
+    usernameInput.addEventListener('input', function() {
+        const username = this.value.trim();
+        usernameError.textContent = '';
+
+        if (username.length > 0 && username.length < 2) {
+            usernameError.textContent = 'الاسم يجب أن يكون على الأقل حرفين';
+        } else if (username.length > 50) {
+            usernameError.textContent = 'الاسم طويل جداً (حد أقصى 50 حرف)';
+        }
+    });
+
+    // Form submission
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        roomCodeError.textContent = '';
+        usernameError.textContent = '';
+        errorAlert.classList.add('hidden');
+
+        const roomCode = roomCodeInput.value.trim().toUpperCase().replace(/\s/g, '');
+        const username = usernameInput.value.trim();
+
+        // Validate room code
+        if (!roomCode || roomCode.length !== 6) {
+            roomCodeError.textContent = 'رمز الغرفة يجب أن يكون 6 أحرف بالضبط';
+            roomCodeInput.focus();
+            return;
+        }
+
+        if (!/^[A-Z0-9]{6}$/.test(roomCode)) {
+            roomCodeError.textContent = 'رمز الغرفة يجب أن يحتوي على أحرف وأرقام فقط';
+            roomCodeInput.focus();
+            return;
+        }
+
+        // Validate username
+        if (!username || username.length < 2) {
+            usernameError.textContent = 'الاسم يجب أن يكون على الأقل حرفين';
+            usernameInput.focus();
+            return;
+        }
+
+        if (username.length > 50) {
+            usernameError.textContent = 'الاسم طويل جداً';
+            usernameInput.focus();
+            return;
+        }
+
+        // Show loading state
+        joinBtn.disabled = true;
+        joinLoading.classList.remove('hidden');
+        joinText.textContent = 'جاري الانضمام...';
+        loadingOverlay.classList.remove('hidden');
+
+        try {
+            const response = await fetch('{{ url_for("join_room") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    room_code: roomCode,
+                    username: username
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Success - redirect to waiting room
+                loadingOverlay.querySelector('h3').textContent = 'تم الانضمام بنجاح!';
+                loadingOverlay.querySelector('p').textContent = 'جاري تحويلك لغرفة الانتظار...';
+
+                setTimeout(() => {
+                    window.location.href = `/room/${data.room_code}`;
+                }, 1500);
+            } else {
+                // Error handling
+                errorText.textContent = data.error || 'حدث خطأ ما، يرجى المحاولة مرة أخرى';
+                errorAlert.classList.remove('hidden');
+                resetForm();
+            }
+        } catch (error) {
+            errorText.textContent = 'خطأ في الاتصال بالخادم، تحقق من اتصالك بالإنترنت';
+            errorAlert.classList.remove('hidden');
+            resetForm();
+            console.error('Error:', error);
+        }
+    });
+
+    function resetForm() {
+        joinBtn.disabled = false;
+        joinLoading.classList.add('hidden');
+        joinText.textContent = '🚪 الانضمام الآن';
+        loadingOverlay.classList.add('hidden');
+    }
+
+    // Enter key support
+    document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !joinBtn.disabled) {
+            form.dispatchEvent(new Event('submit'));
+        }
+    });
+
+    // URL parameter handling (if room code is passed in URL)
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomCodeParam = urlParams.get('code');
+    if (roomCodeParam) {
+        roomCodeInput.value = roomCodeParam.toUpperCase();
+    }
+});
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .back-btn {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+    }
+
+    .form-section {
+        order: 2;
+    }
+
+    .help-section {
+        order: 1;
+    }
+
+    .join-form {
+        max-width: none;
+    }
+
+    .form-actions {
+        margin-top: 2rem;
+        text-align: center;
+    }
+
+    .help-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .help-step {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .step-number {
+        width: 2.5rem;
+        height: 2.5rem;
+        background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .step-content h4 {
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .step-content p {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .quick-actions {
+        margin-top: 2rem;
+    }
+
+    .quick-actions h4 {
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+    }
+
+    .action-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .action-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        background: var(--secondary-bg);
+        border-radius: var(--radius-md);
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: var(--transition-normal);
+        border: 1px solid var(--border-color);
+    }
+
+    .action-link:hover {
+        background: var(--tertiary-bg);
+        color: var(--text-primary);
+        border-color: var(--accent-purple);
+        transform: translateY(-2px);
+    }
+
+    .alert {
+        margin-top: 2rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .alert-icon {
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+    }
+
+    .loading-content {
+        text-align: center;
+        color: white;
+    }
+
+    .loading-content h3 {
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+    }
+
+    .loading-content p {
+        color: var(--text-secondary);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+        .grid-2 {
+            grid-template-columns: 1fr;
+        }
+
+        .form-section,
+        .help-section {
+            order: unset;
+        }
+
+        .back-btn {
+            position: static;
+            margin-bottom: 1rem;
+            align-self: flex-start;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .page-title {
+            font-size: 2rem;
+        }
+
+        .help-step {
+            flex-direction: column;
+            text-align: center;
+            gap: 0.75rem;
+        }
+
+        .step-number {
+            align-self: center;
+        }
+
+        .action-links {
+            gap: 0.5rem;
+        }
+
+        .action-link {
+            padding: 0.625rem 0.875rem;
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .step-number {
+            width: 2rem;
+            height: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .loading-content h3 {
+            font-size: 1.25rem;
+        }
+    }
+</style>
+{% endblock %}

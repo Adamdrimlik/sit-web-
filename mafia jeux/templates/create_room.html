@@ -1,0 +1,564 @@
+{% extends "base.html" %}
+
+{% block title %}إنشاء غرفة جديدة - Mafia Online{% endblock %}
+
+{% block content %}
+<div class="page-container mafia-bg">
+    <div class="main-content">
+        <div class="container">
+            <!-- Header -->
+            <div class="page-header">
+                <a href="{{ url_for('index') }}" class="btn btn-ghost back-btn">
+                    <span>← رجوع للرئيسية</span>
+                </a>
+                <h1 class="page-title">🎭 إنشاء غرفة جديدة</h1>
+                <p class="page-subtitle">أنت ستكون مضيف هذه الغرفة وتحكم في إعدادات اللعبة</p>
+            </div>
+
+            <!-- Main Form -->
+            <div class="grid grid-2">
+                <!-- Create Room Form -->
+                <div class="form-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">معلومات الغرفة</h3>
+                            <p class="card-subtitle">أدخل اسمك لبدء إنشاء الغرفة</p>
+                        </div>
+
+                        <form id="createRoomForm" class="create-form">
+                            <div class="form-group">
+                                <label for="username" class="form-label">اسم اللاعب *</label>
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    class="form-control"
+                                    placeholder="أدخل اسمك (2-50 حرف)"
+                                    required
+                                    minlength="2"
+                                    maxlength="50"
+                                >
+                                <div class="form-text">سيظهر هذا الاسم لجميع اللاعبين في الغرفة</div>
+                                <div class="form-error" id="usernameError"></div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary btn-lg" id="createBtn">
+                                    <span class="loading hidden" id="createLoading">
+                                        <div class="spinner"></div>
+                                    </span>
+                                    <span id="createText">🎭 إنشاء الغرفة</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Room Settings Preview -->
+                <div class="preview-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">معاينة الإعدادات</h3>
+                            <p class="card-subtitle">إعدادات الغرفة الافتراضية</p>
+                        </div>
+
+                        <div class="settings-preview">
+                            <div class="setting-item">
+                                <div class="setting-icon">👥</div>
+                                <div class="setting-info">
+                                    <div class="setting-name">عدد اللاعبين</div>
+                                    <div class="setting-value">6-15 لاعب</div>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="setting-icon">🎭</div>
+                                <div class="setting-info">
+                                    <div class="setting-name">الأدوار</div>
+                                    <div class="setting-value">مافيا، طبيب، محقق، شيخ، مواطن</div>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="setting-icon">⏰</div>
+                                <div class="setting-info">
+                                    <div class="setting-name">وقت المراحل</div>
+                                    <div class="setting-value">ليل: 60ث، نهار: 180ث</div>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="setting-icon">🎤</div>
+                                <div class="setting-info">
+                                    <div class="setting-name">الصوت</div>
+                                    <div class="setting-value">مفعل (غرف منفصلة)</div>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="setting-icon">🔒</div>
+                                <div class="setting-info">
+                                    <div class="setting-name">الخصوصية</div>
+                                    <div class="setting-value">غرفة خاصة</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="preview-note">
+                            <div class="alert alert-info">
+                                <div class="alert-icon">ℹ️</div>
+                                <div>
+                                    <strong>ملاحظة:</strong> يمكنك تعديل هذه الإعدادات بعد إنشاء الغرفة من غرفة الانتظار
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div id="successMessage" class="success-overlay hidden">
+                <div class="success-card card">
+                    <div class="success-header">
+                        <div class="success-icon">🎉</div>
+                        <h2>تم إنشاء الغرفة بنجاح!</h2>
+                        <p>الآن يمكنك مشاركة رمز الغرفة مع أصدقائك</p>
+                    </div>
+
+                    <div class="room-code-display">
+                        <div class="code-label">رمز الغرفة</div>
+                        <div class="room-code" id="roomCode">------</div>
+                        <button type="button" class="btn btn-outline" id="copyCodeBtn">
+                            <span>📋 نسخ الرمز</span>
+                        </button>
+                    </div>
+
+                    <div class="success-actions">
+                        <button type="button" class="btn btn-secondary" id="shareBtn">
+                            <span>📤 مشاركة</span>
+                        </button>
+                        <button type="button" class="btn btn-primary btn-lg" id="goToWaitingBtn">
+                            <span>🚪 الذهاب لغرفة الانتظار</span>
+                        </button>
+                    </div>
+
+                    <div class="success-tips">
+                        <h4>💡 نصائح للمضيف:</h4>
+                        <ul>
+                            <li>تأكد من انضمام جميع اللاعبين قبل بدء اللعبة</li>
+                            <li>يمكنك تعديل الإعدادات من غرفة الانتظار</li>
+                            <li>استخدم أدوات التحكم لإدارة اللاعبين</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('createRoomForm');
+    const usernameInput = document.getElementById('username');
+    const usernameError = document.getElementById('usernameError');
+    const createBtn = document.getElementById('createBtn');
+    const createLoading = document.getElementById('createLoading');
+    const createText = document.getElementById('createText');
+    const successMessage = document.getElementById('successMessage');
+    const copyCodeBtn = document.getElementById('copyCodeBtn');
+    const shareBtn = document.getElementById('shareBtn');
+    const goToWaitingBtn = document.getElementById('goToWaitingBtn');
+
+    let roomCode = '';
+    let roomId = '';
+
+    // Form validation
+    usernameInput.addEventListener('input', function() {
+        const username = this.value.trim();
+        usernameError.textContent = '';
+
+        if (username.length < 2 && username.length > 0) {
+            usernameError.textContent = 'الاسم يجب أن يكون على الأقل حرفين';
+        } else if (username.length > 50) {
+            usernameError.textContent = 'الاسم طويل جداً (حد أقصى 50 حرف)';
+        }
+    });
+
+    // Form submission
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        usernameError.textContent = '';
+
+        const username = usernameInput.value.trim();
+
+        if (!username || username.length < 2) {
+            usernameError.textContent = 'الاسم يجب أن يكون على الأقل حرفين';
+            usernameInput.focus();
+            return;
+        }
+
+        if (username.length > 50) {
+            usernameError.textContent = 'الاسم طويل جداً';
+            usernameInput.focus();
+            return;
+        }
+
+        // Show loading state
+        createBtn.disabled = true;
+        createLoading.classList.remove('hidden');
+        createText.textContent = 'جاري إنشاء الغرفة...';
+
+        try {
+            const response = await fetch('{{ url_for("create_room") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username: username })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                roomCode = data.room_code;
+                roomId = data.room_id;
+                document.getElementById('roomCode').textContent = roomCode;
+
+                // Show success message with animation
+                successMessage.classList.remove('hidden');
+                successMessage.classList.add('fade-in');
+
+                // Scroll to success message
+                successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            } else {
+                usernameError.textContent = data.error || 'حدث خطأ ما، يرجى المحاولة مرة أخرى';
+                resetForm();
+            }
+        } catch (error) {
+            usernameError.textContent = 'خطأ في الاتصال بالخادم، تحقق من اتصالك بالإنترنت';
+            resetForm();
+            console.error('Error:', error);
+        }
+    });
+
+    function resetForm() {
+        createBtn.disabled = false;
+        createLoading.classList.add('hidden');
+        createText.textContent = '🎭 إنشاء الغرفة';
+    }
+
+    // Copy room code
+    copyCodeBtn.addEventListener('click', function() {
+        navigator.clipboard.writeText(roomCode).then(() => {
+            const originalHTML = copyCodeBtn.innerHTML;
+            copyCodeBtn.innerHTML = '<span>✅ تم النسخ!</span>';
+            copyCodeBtn.classList.add('btn-success');
+
+            setTimeout(() => {
+                copyCodeBtn.innerHTML = originalHTML;
+                copyCodeBtn.classList.remove('btn-success');
+            }, 2000);
+        }).catch(() => {
+            alert('فشل في نسخ الرمز، يرجى نسخه يدوياً');
+        });
+    });
+
+    // Share room code
+    shareBtn.addEventListener('click', function() {
+        if (navigator.share) {
+            navigator.share({
+                title: 'انضم للعبة المافيا!',
+                text: `انضم لغرفتي في لعبة المافيا! رمز الغرفة: ${roomCode}`,
+                url: window.location.origin + `/join/${roomCode}`
+            });
+        } else {
+            // Fallback: copy to clipboard
+            navigator.clipboard.writeText(`${window.location.origin}/join/${roomCode}`);
+            alert('تم نسخ رابط الغرفة! شاركه مع أصدقائك');
+        }
+    });
+
+    // Go to waiting room
+    goToWaitingBtn.addEventListener('click', function() {
+        window.location.href = `/room/${roomCode}`;
+    });
+
+    // Enter key support
+    usernameInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            form.dispatchEvent(new Event('submit'));
+        }
+    });
+});
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .back-btn {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+    }
+
+    .form-section {
+        order: 2;
+    }
+
+    .preview-section {
+        order: 1;
+    }
+
+    .create-form {
+        max-width: none;
+    }
+
+    .form-actions {
+        margin-top: 2rem;
+        text-align: center;
+    }
+
+    .settings-preview {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .setting-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: var(--secondary-bg);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-color);
+    }
+
+    .setting-icon {
+        font-size: 1.5rem;
+        width: 3rem;
+        text-align: center;
+    }
+
+    .setting-info {
+        flex: 1;
+    }
+
+    .setting-name {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+    }
+
+    .setting-value {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .preview-note {
+        margin-top: 2rem;
+    }
+
+    .alert {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .alert-icon {
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    .success-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+    }
+
+    .success-card {
+        max-width: 500px;
+        width: 90%;
+        text-align: center;
+    }
+
+    .success-header {
+        margin-bottom: 2rem;
+    }
+
+    .success-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .success-header h2 {
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .success-header p {
+        color: var(--text-secondary);
+    }
+
+    .room-code-display {
+        margin: 2rem 0;
+    }
+
+    .code-label {
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .room-code {
+        font-family: 'Courier New', monospace;
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--accent-purple);
+        letter-spacing: 3px;
+        padding: 1rem;
+        background: var(--secondary-bg);
+        border: 2px solid var(--accent-purple);
+        border-radius: var(--radius-lg);
+        margin-bottom: 1rem;
+        box-shadow: var(--shadow-md);
+    }
+
+    .success-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin: 2rem 0;
+    }
+
+    .success-tips {
+        text-align: right;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .success-tips h4 {
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+    }
+
+    .success-tips ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .success-tips li {
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+        padding-right: 1rem;
+        position: relative;
+    }
+
+    .success-tips li::before {
+        content: '•';
+        position: absolute;
+        right: 0;
+        color: var(--accent-purple);
+        font-weight: bold;
+    }
+
+    .btn-success {
+        background: var(--success) !important;
+        color: white !important;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+        .grid-2 {
+            grid-template-columns: 1fr;
+        }
+
+        .form-section,
+        .preview-section {
+            order: unset;
+        }
+
+        .back-btn {
+            position: static;
+            margin-bottom: 1rem;
+            align-self: flex-start;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .page-title {
+            font-size: 2rem;
+        }
+
+        .success-actions {
+            flex-direction: column;
+        }
+
+        .success-actions .btn {
+            width: 100%;
+        }
+
+        .room-code {
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+
+        .setting-item {
+            flex-direction: column;
+            text-align: center;
+            gap: 0.5rem;
+        }
+
+        .setting-icon {
+            width: auto;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .success-card {
+            padding: 1.5rem;
+        }
+
+        .success-icon {
+            font-size: 3rem;
+        }
+
+        .room-code {
+            font-size: 1.25rem;
+            padding: 0.75rem;
+        }
+    }
+</style>
+{% endblock %}

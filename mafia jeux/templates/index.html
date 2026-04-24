@@ -1,0 +1,556 @@
+{% extends "base.html" %}
+
+{% block title %}Mafia Online - لعبة المافيا الإلكترونية{% endblock %}
+
+{% block content %}
+<div class="page-container mafia-bg">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="game-logo">🎭 MAFIA ONLINE</h1>
+                    <p class="hero-subtitle">
+                        لعبة المافيا الإلكترونية الاحترافية مع صوت وأدوار متقدمة
+                    </p>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="stat-number">6-15</span>
+                            <span class="stat-label">لاعب</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">8</span>
+                            <span class="stat-label">أدوار</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">🎤</span>
+                            <span class="stat-label">صوت</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-actions">
+                    <div class="action-card">
+                        <div class="action-icon">➕</div>
+                        <h3>إنشاء غرفة</h3>
+                        <p>كن المضيف وتحكم في اللعبة</p>
+                        <a href="{{ url_for('create_room') }}" class="btn btn-primary btn-xl">
+                            <span>إنشاء غرفة جديدة</span>
+                        </a>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-icon">🚪</div>
+                        <h3>الانضمام لغرفة</h3>
+                        <p>استخدم رمز الغرفة للانضمام</p>
+                        <a href="{{ url_for('join_room') }}" class="btn btn-secondary btn-xl">
+                            <span>الانضمام الآن</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title">✨ المميزات الاحترافية</h2>
+
+            <div class="grid grid-3">
+                <div class="feature-card card">
+                    <div class="feature-icon">🎭</div>
+                    <h4>أدوار متقدمة</h4>
+                    <p>8 أدوار مختلفة مع قدرات خاصة لكل دور</p>
+                    <ul class="feature-list">
+                        <li>مافيا بوس - زعيم المافيا</li>
+                        <li>طبيب - يحمي اللاعبين</li>
+                        <li>محقق - يكشف الهويات</li>
+                        <li>شيخ - يحصل على تلميحات</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card card">
+                    <div class="feature-icon">🎤</div>
+                    <h4>دردشة صوتية</h4>
+                    <p>نظام صوت احترافي مع غرف منفصلة</p>
+                    <ul class="feature-list">
+                        <li>صوت عام في النهار</li>
+                        <li>غرفة مافيا سرية</li>
+                        <li>غرفة الأموات (اختياري)</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card card">
+                    <div class="feature-icon">⚙️</div>
+                    <h4>إعدادات مخصصة</h4>
+                    <p>تحكم كامل في إعدادات اللعبة</p>
+                    <ul class="feature-list">
+                        <li>تخصيص عدد الأدوار</li>
+                        <li>ضبط أوقات المراحل</li>
+                        <li>تفعيل/إلغاء المميزات</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card card">
+                    <div class="feature-icon">📊</div>
+                    <h4>إحصائيات شاملة</h4>
+                    <p>تتبع أداء اللاعبين والألعاب</p>
+                    <ul class="feature-list">
+                        <li>سجل الألعاب الكامل</li>
+                        <li>نسبة الفوز</li>
+                        <li>أفضل اللاعبين</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card card">
+                    <div class="feature-icon">🌙</div>
+                    <h4>مراحل اللعب</h4>
+                    <p>نظام يوم/ليل متقدم</p>
+                    <ul class="feature-list">
+                        <li>ليل - أفعال المافيا</li>
+                        <li>نهار - نقاش وتصويت</li>
+                        <li>انتقالات تلقائية</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card card">
+                    <div class="feature-icon">🛡️</div>
+                    <h4>أمان وخصوصية</h4>
+                    <p>حماية كاملة لبيانات اللاعبين</p>
+                    <ul class="feature-list">
+                        <li>تشفير البيانات</li>
+                        <li>جلسات آمنة</li>
+                        <li>حماية من الاختراق</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How to Play Section -->
+    <section class="how-to-play-section">
+        <div class="container">
+            <h2 class="section-title">🎯 كيف تلعب</h2>
+
+            <div class="steps-grid">
+                <div class="step-card card">
+                    <div class="step-number">1</div>
+                    <h4>إنشاء أو الانضمام</h4>
+                    <p>أنشئ غرفة جديدة أو انضم لغرفة موجودة باستخدام الرمز</p>
+                </div>
+
+                <div class="step-card card">
+                    <div class="step-number">2</div>
+                    <h4>توزيع الأدوار</h4>
+                    <p>يتم توزيع الأدوار تلقائياً وسرية لكل لاعب</p>
+                </div>
+
+                <div class="step-card card">
+                    <div class="step-number">3</div>
+                    <h4>الليل والنهار</h4>
+                    <p>في الليل تتحرك المافيا، في النهار يتم النقاش والتصويت</p>
+                </div>
+
+                <div class="step-card card">
+                    <div class="step-number">4</div>
+                    <h4>الفوز</h4>
+                    <p>يفوز الفريق الذي ينجح في القضاء على الفريق الآخر</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="game-logo">🎭 MAFIA ONLINE</span>
+                    <p>لعبة المافيا الإلكترونية الاحترافية</p>
+                </div>
+
+                <div class="footer-links">
+                    <a href="#" class="footer-link">📋 قواعد اللعبة</a>
+                    <a href="#" class="footer-link">📞 دعم فني</a>
+                    <a href="#" class="footer-link">📊 إحصائيات</a>
+                    <a href="#" class="footer-link">🔒 سياسة الخصوصية</a>
+                </div>
+
+                <div class="footer-social">
+                    <p>تابعنا على:</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📘 فيسبوك</a>
+                        <a href="#" class="social-link">🐦 تويتر</a>
+                        <a href="#" class="social-link">📷 إنستغرام</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Mafia Online. جميع الحقوق محفوظة.</p>
+                <p>تم التطوير باستخدام Flask & Socket.IO</p>
+            </div>
+        </div>
+    </footer>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .hero-section {
+        padding: 4rem 0 6rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 30% 40%, rgba(108, 92, 231, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 70% 60%, rgba(255, 71, 87, 0.1) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
+    .hero-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-text {
+        text-align: right;
+    }
+
+    .game-logo {
+        font-size: 4rem;
+        font-weight: 900;
+        margin-bottom: 1rem;
+        text-shadow: 0 0 40px rgba(108, 92, 231, 0.5);
+    }
+
+    .hero-subtitle {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .hero-stats {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat {
+        text-align: center;
+    }
+
+    .stat-number {
+        display: block;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--accent-purple);
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .hero-actions {
+        display: grid;
+        gap: 2rem;
+    }
+
+    .action-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-xl);
+        padding: 2rem;
+        text-align: center;
+        transition: var(--transition-normal);
+        backdrop-filter: blur(10px);
+    }
+
+    .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-xl);
+        border-color: var(--accent-purple);
+    }
+
+    .action-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .action-card h3 {
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        font-size: 1.25rem;
+    }
+
+    .action-card p {
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+    }
+
+    /* Features Section */
+    .features-section {
+        padding: 6rem 0;
+        background: var(--secondary-bg);
+    }
+
+    .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+        color: var(--text-primary);
+    }
+
+    .feature-card {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .feature-card h4 {
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+        font-size: 1.25rem;
+    }
+
+    .feature-card p {
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+    }
+
+    .feature-list {
+        text-align: right;
+        list-style: none;
+        padding: 0;
+    }
+
+    .feature-list li {
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+        padding-right: 1rem;
+        position: relative;
+    }
+
+    .feature-list li::before {
+        content: '✓';
+        position: absolute;
+        right: -0.5rem;
+        color: var(--accent-green);
+        font-weight: bold;
+    }
+
+    /* How to Play Section */
+    .how-to-play-section {
+        padding: 6rem 0;
+        background: var(--primary-bg);
+    }
+
+    .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+    }
+
+    .step-card {
+        text-align: center;
+        position: relative;
+    }
+
+    .step-number {
+        width: 4rem;
+        height: 4rem;
+        background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0 auto 1rem;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .step-card h4 {
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+    }
+
+    .step-card p {
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    /* Footer */
+    .footer {
+        background: var(--secondary-bg);
+        border-top: 1px solid var(--border-color);
+        padding: 3rem 0 1rem;
+        margin-top: 4rem;
+    }
+
+    .footer-content {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 3rem;
+        margin-bottom: 2rem;
+    }
+
+    .footer-logo .game-logo {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .footer-logo p {
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    .footer-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .footer-link {
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: var(--transition-fast);
+    }
+
+    .footer-link:hover {
+        color: var(--accent-purple);
+    }
+
+    .footer-social p {
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+    }
+
+    .social-links {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .social-link {
+        color: var(--text-muted);
+        text-decoration: none;
+        transition: var(--transition-fast);
+    }
+
+    .social-link:hover {
+        color: var(--accent-purple);
+    }
+
+    .footer-bottom {
+        border-top: 1px solid var(--border-color);
+        padding-top: 1rem;
+        text-align: center;
+        color: var(--text-muted);
+    }
+
+    .footer-bottom p {
+        margin: 0.25rem 0;
+        font-size: 0.875rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+        .hero-content {
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            text-align: center;
+        }
+
+        .hero-text {
+            text-align: center;
+        }
+
+        .hero-actions {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .footer-content {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            text-align: center;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 3rem 0 4rem;
+        }
+
+        .game-logo {
+            font-size: 3rem;
+        }
+
+        .hero-stats {
+            justify-content: center;
+        }
+
+        .features-section,
+        .how-to-play-section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+        }
+
+        .steps-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .footer {
+            padding: 2rem 0 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .game-logo {
+            font-size: 2.5rem;
+        }
+
+        .hero-stats {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .action-card {
+            padding: 1.5rem;
+        }
+
+        .feature-card,
+        .step-card {
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}

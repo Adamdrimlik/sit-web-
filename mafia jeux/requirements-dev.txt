@@ -1,0 +1,20 @@
+# Development Requirements
+# تثبيت باستخدام: pip install -r requirements-dev.txt
+
+# المكتبات الأساسية (من requirements.txt)
+-r requirements.txt
+
+# أدوات التطوير
+black==23.12.1           # تنسيق الكود
+flake8==6.1.0            # فحص الكود
+isort==5.13.2            # ترتيب الـ imports
+
+# الاختبار
+pytest==7.4.3            # إطار عمل الاختبار
+pytest-cov==4.1.0        # تغطية الاختبار
+
+# التصحيح
+debugpy==1.8.0           # أداة التصحيح
+
+# الوثائق
+sphinx==7.2.6            # توليد الوثائق
